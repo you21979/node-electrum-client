@@ -1,7 +1,7 @@
-const ElectrumCli = require('..')
+const ElectrumClient = require('..')
 
 const main = async () => {
-    const ecl = new ElectrumCli(995, 'btc.smsys.me', 'tls')
+    const ecl = new ElectrumClient(995, 'btc.smsys.me', 'tls')
     await ecl.connect()
     try{
         const ver = await ecl.server_version("2.7.11", "1.0")
