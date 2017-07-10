@@ -1,1 +1,1 @@
-module.exports = require('./lib/electrum_cli');
+module.exports = require('./lib/electrum_client');
