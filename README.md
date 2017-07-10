@@ -8,6 +8,13 @@ Electrum Protocol Client for Node.js
 npm i electrum-client
 ```
 
+## spec
+
+* http://docs.electrum.org/en/latest/protocol.html
+* TCP / TLS
+* JSON-RPC
+* Subscribe Message
+
 ## usage
 
 ```
