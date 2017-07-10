@@ -1,5 +1,5 @@
 const ElectrumClient = require('..')
-const sleep = (ms) => new Promise((resolve,_) => setTimeout(() => resolve(ms), ms))
+const sleep = (ms) => new Promise((resolve,_) => setTimeout(() => resolve(), ms))
 
 const main = async () => {
     const ecl = new ElectrumClient(995, 'btc.smsys.me', 'tls')
