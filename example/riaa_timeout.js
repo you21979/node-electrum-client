@@ -24,7 +24,7 @@ const createRiaaClient = (port, host, protocol, options) => {
 const main = async(hex) => {
     const hosts = ['electrum-mona.bitbank.cc', 'electrumx.tamami-foundation.org']
     const host = hosts[Math.floor(Math.random() * hosts.length)]
-    const connect = createRiaaClient(50001, host, 'tcp')
+    const connect = createRiaaClient(50000, host, 'tcp')
     await connect(['blockchainTransaction_broadcast', hex], async(client) => {
         const ver = await client.server_version('2.7.11', '1.0')
         console.log(ver)
