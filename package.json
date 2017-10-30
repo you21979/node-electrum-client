@@ -7,6 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {},
+  "devDependencies": {
+    "electrum-host-parse": "*"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/you21979/node-electrum-client.git"
