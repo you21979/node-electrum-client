@@ -10,6 +10,10 @@ const main = async () => {
         console.log(balance)
         const unspent = await ecl.blockchainScripthash_listunspent("676ca8550e249787290b987e12cebdb2e9b26d88c003d836ffb1cb03ffcbea7c")
         console.log(unspent)
+        const history = await ecl.blockchainScripthash_getHistory("676ca8550e249787290b987e12cebdb2e9b26d88c003d836ffb1cb03ffcbea7c")
+        console.log(history)
+        const mempool = await ecl.blockchainScripthash_getMempool("676ca8550e249787290b987e12cebdb2e9b26d88c003d836ffb1cb03ffcbea7c")
+        console.log(mempool)
     }catch(e){
         console.log(e)
     }
