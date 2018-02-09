@@ -17,12 +17,16 @@ npm i electrum-client
 
 ## spec
 
-* http://docs.electrum.org/en/latest/protocol.html
 * TCP / TLS
 * JSON-RPC
 * Subscribe Message
 * High Performance Message
 * no dependency for other library
+
+## protocol spec
+
+* http://docs.electrum.org/en/latest/protocol.html
+* https://github.com/kyuupichan/electrumx/blob/master/docs/PROTOCOL.rst
 
 ## usage
 
