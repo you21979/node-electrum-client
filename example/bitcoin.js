@@ -1,4 +1,5 @@
-const ElectrumClient = require('..')
+const ElectrumClient = require("..")
+
 
 const peers = require('electrum-host-parse').getDefaultPeers("BitcoinSegwit").filter(v => v.ssl)
 const getRandomPeer = () => peers[peers.length * Math.random() | 0]

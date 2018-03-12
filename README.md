@@ -25,8 +25,7 @@ npm i electrum-client
 
 ## protocol spec
 
-* http://docs.electrum.org/en/latest/protocol.html
-* https://github.com/kyuupichan/electrumx/blob/master/docs/PROTOCOL.rst
+* https://electrumx.readthedocs.io/en/latest/PROTOCOL.html
 
 ## usage
 
