@@ -1,30 +1,46 @@
 {
   "name": "electrum-client",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "description": "Electrum protocol client for node.js",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "electrum-host-parse": "*"
-  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src",
+    "example",
+    "package.json",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/you21979/node-electrum-client.git"
+    "url": "git+https://github.com/you21979/node-electrum-client..git"
   },
-  "bugs": {
-    "url": "https://github.com/you21979/node-electrum-client/issues"
+  "engines": {
+    "node": ">=6"
   },
   "keywords": [
     "client",
     "electrum",
     "bitcoin"
   ],
-  "engines": {
-    "node": ">=6"
+  "devDependencies": {
+    "electrum-host-parse": "*",
+    "@types/node": "^9.6.0",
+    "@types/mocha": "^5.0.0",
+    "typescript": "^2.8.0",
+    "istanbul": "^0.4.5",
+    "coveralls": "^3.0.0",
+    "mocha": "^5.0.5"
+  },
+  "scripts": {
+    "build": "./node_modules/.bin/tsc -p ./",
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha ./dist/test",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "author": "Yuki Akiyama",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/you21979/node-electrum-client./issues"
+  },
+  "homepage": "https://github.com/you21979/node-electrum-client.#readme"
 }
