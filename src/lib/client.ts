@@ -68,7 +68,7 @@ export class Client implements ISocketEvent{
         this.status = 0
     }
 
-    request(method: string, params: any): Promise<rpctype.IResponse>{
+    request(method: string, params: any): Promise<any>{
         if(!this.status) {
             return Promise.reject(new Error('ESOCKET'))
         }
