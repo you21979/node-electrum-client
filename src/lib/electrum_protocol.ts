@@ -1,5 +1,3 @@
-export interface IProtocolCommon{
-}
 export interface IProtocolV0_9{
     server_version: (client_name: string, protocol_version: string) => Promise<string>
 }

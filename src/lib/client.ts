@@ -2,7 +2,7 @@ import {Socket} from 'net'
 import {EventEmitter} from 'events'
 import {initSocket, connectSocket, ISocketEvent} from './socket_helper'
 import {JsonMessageParser} from './json_message_parser'
-import * as rpctype from './jsonrpc_type'
+import {type2, util2} from 'jsonrpc-spec'
 
 type async_callback = (e: null | Error, message?: any) => void
 
@@ -31,18 +31,18 @@ export class Client implements ISocketEvent{
         this.subscribe = new EventEmitter()
         this.conn = initSocket(this, protocol, options)
         this.jmp = new JsonMessageParser((obj: any): void => {
-            const type = rpctype.autoDetect(obj)
+            const type = util2.autoDetect(obj)
             switch(type){
-            case rpctype.JSON_TYPE.BATCH:
+            case type2.JSON_TYPE.BATCH:
                 break // don't support batch request
-            case rpctype.JSON_TYPE.RESPONSE:
-                this.onMessageResponse(rpctype.JSON_TYPE.RESPONSE, rpctype.resolveResponse(obj))
+            case type2.JSON_TYPE.RESPONSE:
+                this.onMessageResponse(type2.JSON_TYPE.RESPONSE, obj as type2.IBaseResponse)
                 break
-            case rpctype.JSON_TYPE.RESPONSE_ERROR:
-                this.onMessageResponse(rpctype.JSON_TYPE.RESPONSE_ERROR, rpctype.resolveResponseError(obj))
+            case type2.JSON_TYPE.RESPONSE_ERROR:
+                this.onMessageResponse(type2.JSON_TYPE.RESPONSE_ERROR, obj as type2.IBaseResponse)
                 break
-            case rpctype.JSON_TYPE.NOTIFICATION:
-                this.onMessageNotification(rpctype.resolveNotification(obj))
+            case type2.JSON_TYPE.NOTIFICATION:
+                this.onMessageNotification(obj)
                 break
             default:
                 break;
@@ -68,30 +68,30 @@ export class Client implements ISocketEvent{
         this.status = 0
     }
 
-    request(method: string, params: any): Promise<any>{
+    request<T1, T2>(method: string, params: T1): Promise<T2>{
         if(!this.status) {
             return Promise.reject(new Error('ESOCKET'))
         }
-        return new Promise((resolve, reject) => {
+        return new Promise<T2>((resolve, reject) => {
             const id: number = ++this.seq
-            const req: rpctype.IRequest = rpctype.makeRequest(method, params, id)
+            const req: type2.IRequest<T1> = util2.makeRequest<T1>(id, method, params)
             const content: string = [JSON.stringify(req), '\n'].join('')
             this.callback_message_table[id] = createPromiseResult(resolve, reject)
             this.conn.write(content)
         })
     }
 
-    response(type: rpctype.JSON_TYPE, message: rpctype.IResponse | rpctype.IResponseError){
-        const cb: async_callback = this.callback_message_table[message.id]
+    response(type: type2.JSON_TYPE, obj: type2.IBaseResponse){
+        const cb: async_callback = this.callback_message_table[obj.id]
         if(cb){
-            delete this.callback_message_table[message.id]
+            delete this.callback_message_table[obj.id]
             switch(type){
-            case rpctype.JSON_TYPE.RESPONSE:
-                const r: rpctype.IResponse = message as rpctype.IResponse
+            case type2.JSON_TYPE.RESPONSE:
+                const r: type2.IResponse<any> = util2.resolveResponse<any>(obj)
                 cb(null, r.result)
                 break
-            case rpctype.JSON_TYPE.RESPONSE_ERROR:
-                const re: rpctype.IResponseError = message as rpctype.IResponseError
+            case type2.JSON_TYPE.RESPONSE_ERROR:
+                const re: type2.IResponseError = util2.resolveResponseError(obj)
                 cb(new Error(re.error.code + ': ' + re.error.message))
                 break
             }
@@ -100,11 +100,12 @@ export class Client implements ISocketEvent{
         }
     }
 
-    private onMessageResponse(type: rpctype.JSON_TYPE, message: rpctype.IResponse | rpctype.IResponseError){
-        this.response(type, message)
+    private onMessageResponse(type: type2.JSON_TYPE, obj: type2.IBaseResponse): void{
+        this.response(type, obj)
     }
 
-    private onMessageNotification(message: rpctype.INotification){
+    private onMessageNotification(obj: any): void{
+        const message = util2.resolveNotification<any>(obj)
         this.subscribe.emit(message.method, message.params)
     }
 
@@ -113,7 +114,8 @@ export class Client implements ISocketEvent{
 
     onClose(): void{
         Object.keys(this.callback_message_table).forEach((key) => {
-            this.callback_message_table[key](new Error('close connect'))
+            const cb: async_callback = this.callback_message_table[key]
+            cb(new Error('close connect'))
             delete this.callback_message_table[key]
         })
     }
@@ -122,7 +124,7 @@ export class Client implements ISocketEvent{
         try{
             this.jmp.run(chunk)
         }catch(e){
-            // close
+            this.conn.on('error', e)
         }
     }
 
@@ -130,6 +132,7 @@ export class Client implements ISocketEvent{
     }
 
     onError(e: Error): void{
+        this.close()
     }
 
 }
