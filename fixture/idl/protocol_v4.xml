@@ -15,6 +15,11 @@
 		<param name="block_height" type="number" desc="The height of the block the transaction was confirmed in."/>
 		<param name="pos" type="number" desc="The 0-based index of the position of the transaction in the ordered list of transactions in the block."/>
 	</struct>
+	<struct name="tx_info_mempool">
+		<param name="tx_hash" type="string" desc=""/>
+		<param name="height" type="number" desc=""/>
+		<param name="fee" type="number" desc=""/>
+	</struct>
 
 	<!-- rpc -->
 
@@ -65,20 +70,20 @@
 
 
 	<!-- new -->
-	<request name="blockchain.scripthash.get_balance" dir="client" result="any" desc="">
-		<param name="scripthash" type="string" desc=""/>
+	<request name="blockchain.scripthash.get_balance" dir="client" result="coin_balance" desc="Return the confirmed and unconfirmed balances of a script hash.">
+		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
 	</request>
-	<request name="blockchain.scripthash.get_history" dir="client" result="any" desc="">
-		<param name="scripthash" type="string" desc=""/>
+	<request name="blockchain.scripthash.get_history" dir="client" result="array<object>" desc="Return the confirmed and unconfirmed history of a script hash.">
+		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
 	</request>
-	<request name="blockchain.scripthash.get_mempool" dir="client" result="any" desc="">
-		<param name="scripthash" type="string" desc=""/>
+	<request name="blockchain.scripthash.get_mempool" dir="client" result="array<tx_info_mempool>" desc="Return the unconfirmed transactions of a script hash.">
+		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
 	</request>
 	<request name="blockchain.scripthash.listunspent" dir="client" result="any" desc="">
-		<param name="scripthash" type="string" desc=""/>
+		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
 	</request>
 	<request name="blockchain.scripthash.subscribe" dir="client" result="any" desc="">
-		<param name="scripthash" type="string" desc=""/>
+		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
 	</request>
 	<notification name="blockchain.scripthash.subscribe" dir="server">
 		<param name="scripthash" type="string" desc=""/>
@@ -87,7 +92,7 @@
 
 	<!-- new -->
 	<request name="server.ping" dir="client" result="void"/>
-	<request name="mempool.get_fee_histogram" dir="client" result="array<tuple<number, number>>"
+	<request name="mempool.get_fee_histogram" dir="client" result="array<tuple[number, number]>"
 			desc="Return a histogram of the fee rates paid by transactions in the memory pool, weighted by transaction size. [fee, vsize] pairs"/>
 
 

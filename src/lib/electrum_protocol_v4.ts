@@ -2,7 +2,7 @@ import {Client} from './client'
 
 // this file is auto generated.
 export const document = {
-    hash : "264a4ec85c1ae2ae82661255da6c676e7d58a24e665c4d981c8cb032b49a1940"
+    hash : "4a59589e50ccbe3acf25c1f0c52d28da51149994be3b00f037172be517853131"
 }
 
 
@@ -29,13 +29,21 @@ export interface ITxMerkle {
 }
 
 
+// 
+export interface ITxInfoMempool {
+    tx_hash: string
+    height: number
+    fee: number
+}
+
+
 export class ElectrumProtocol extends Client{
     static version: string = "1.2"
     constructor(port, host, protocol, options){
         super(port, host, protocol, options)
     }
     // Identify the client to the server and negotiate the protocol version.
-    public server_version ( client_name: string, protocol_version: [string,string] = ['1.2','1.2'] ): Promise<string> {
+    public server_version ( client_name: string, protocol_version: [string,string] = ['1.2', '1.2'] ): Promise<string> {
         return this.request("server.version", [ client_name, protocol_version ])
     }
     // 
@@ -86,16 +94,16 @@ export class ElectrumProtocol extends Client{
     public blockchain_headers_subscribe ( raw: boolean = true ): Promise<IBlockHeader> {
         return this.request("blockchain.headers.subscribe", [ raw ])
     }
-    // 
-    public blockchain_scripthash_getBalance ( scripthash: string ): Promise<object> {
+    // Return the confirmed and unconfirmed balances of a script hash.
+    public blockchain_scripthash_getBalance ( scripthash: string ): Promise<ICoinBalance> {
         return this.request("blockchain.scripthash.get_balance", [ scripthash ])
     }
-    // 
-    public blockchain_scripthash_getHistory ( scripthash: string ): Promise<object> {
+    // Return the confirmed and unconfirmed history of a script hash.
+    public blockchain_scripthash_getHistory ( scripthash: string ): Promise<Array<object>> {
         return this.request("blockchain.scripthash.get_history", [ scripthash ])
     }
-    // 
-    public blockchain_scripthash_getMempool ( scripthash: string ): Promise<object> {
+    // Return the unconfirmed transactions of a script hash.
+    public blockchain_scripthash_getMempool ( scripthash: string ): Promise<Array<ITxInfoMempool>> {
         return this.request("blockchain.scripthash.get_mempool", [ scripthash ])
     }
     // 
