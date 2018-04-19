@@ -1,0 +1,42 @@
+import {Client} from './client'
+
+// this file is auto generated.
+export const document = {
+    hash : "{{ document.hash }}"
+}
+
+{% for i in struct %}
+{% set ts = i.code(coder.typescript) %}
+// {{ i.desc }}
+export interface {{ ts.struct_name }} {
+    {{ ts.struct_params.join('\n    ') | safe }}
+}
+{% endfor %}
+
+export class {{ util.makeUpperCamelCase(name, "-") }} extends Client{
+    static version: string = "{{ version }}"
+    constructor(port, host, protocol, options){
+        super(port, host, protocol, options)
+    }
+{%- for i in request -%}
+{%- if i.dir === 0 -%}
+    {% set ts = i.code(coder.typescript) %}
+    // {{ i.desc }}
+    public {{ ts.func_name }} ( {{ ts.func_params.join(", ") | safe}} ): Promise<{{ ts.func_return | safe}}> {
+        return this.request("{{ i.name }}", [ {{ ts.params.join(", ") }} ])
+    }
+{%- endif -%}
+{%- endfor %}
+
+    onClose(): void{
+        super.onClose()
+        const list: Array<string> = []
+{%- for i in notification -%}
+{% if i.dir === 1 %}
+        list.push("{{ i.name }}")
+{%- endif -%}
+{%- endfor %}
+        list.forEach(event => this.subscribe.removeAllListeners(event))
+    }
+}
+

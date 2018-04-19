@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<idl name="electrum-protocol" version="1.2">
+
+	<!-- struct -->
+	<struct name="coin_balance">
+		<param name="confirmed" type="string" desc=""/>
+		<param name="unconfirmed" type="string" desc=""/>
+	</struct>
+	<struct name="block_header">
+		<param name="height" type="number" desc=""/>
+		<param name="hex" type="string" desc=""/>
+	</struct>
+	<struct name="tx_merkle">
+		<param name="merkle" type="array<string>" desc="A list of transaction hashes the current hash is paired with, recursively, in order to trace up to obtain merkle root of the block, deepest pairing first."/>
+		<param name="block_height" type="number" desc="The height of the block the transaction was confirmed in."/>
+		<param name="pos" type="number" desc="The 0-based index of the position of the transaction in the ordered list of transactions in the block."/>
+	</struct>
+
+	<!-- rpc -->
+
+	<request name="server.version" dir="client" result="string" desc="Identify the client to the server and negotiate the protocol version.">
+		<param name="client_name" type="string" desc="A string identifying the connecting client software."/>
+		<param name="protocol_version" type="tuple<string,string>" default="['1.2']" desc="An array [protocol_min, protocol_max]"/>
+	</request>
+
+	<request name="server.banner" dir="client" result="string"/>
+	<request name="server.donation_address" dir="client" result="string"/>
+	<request name="server.features" dir="client" result="object"/>
+	<request name="server.peers.subscribe" dir="client" result="array<any>" desc="They don’t send notifications yet"/>
+
+	<request name="blockchain.transaction.broadcast" dir="client" result="string">
+		<param name="rawtx" type="string" desc=""/>
+	</request>
+	<request name="blockchain.transaction.get_merkle" dir="client" result="tx_merkle" desc="Return the markle branch to a confirmed transaction given its hash and height.">
+		<param name="tx_hash" type="string" desc="The transaction hash as a hexadecimal string."/>
+		<param name="tx_height" type="number" desc="The height at which it was confirmed, an integer."/>
+	</request>
+	<request name="blockchain.transaction.get" dir="client" result="string" desc="Return a raw transaction.">
+		<param name="tx_hash" type="string" desc="The transaction hash as a hexadecimal string."/>
+		<param name="verbose" type="boolean" default="false" desc="Whether a verbose coin-specific response is required."/>
+	</request>
+	<request name="blockchain.transaction.get_parsed" alias="blockchain.transaction.get" dir="client" result="object" desc="Return a transaction.">
+		<param name="tx_hash" type="string" desc="The transaction hash as a hexadecimal string."/>
+		<param name="verbose" type="boolean" default="true" desc="Whether a verbose coin-specific response is required."/>
+	</request>
+
+	<request name="blockchain.estimatefee" dir="client" result="number">
+		<param name="target_block" type="number" desc="2 - 6 block"/>
+	</request>
+
+	<request name="blockchain.address.get_proof" dir="client" result="any">
+		<param name="address" type="string" desc="The address as a Base58 string."/>
+	</request>
+
+	<request name="blockchain.block.get_header" dir="client" result="object">
+		<param name="height" type="number" desc=""/>
+	</request>
+
+	<request name="blockchain.headers.subscribe" dir="client" result="block_header" desc="Subscribe to receive block headers when a new block is found.">
+		<param name="raw" type="boolean" default="true" desc=""/>
+	</request>
+	<notification name="blockchain.headers.subscribe" dir="server">
+		<param name="block_header" type="block_header" desc=""/>
+	</notification>
+
+	<!-- new -->
+	<request name="server.ping" dir="client" result="void"/>
+	<request name="mempool.get_fee_histogram" dir="client" result="array<tuple<number, number>>"
+			desc="Return a histogram of the fee rates paid by transactions in the memory pool, weighted by transaction size. [fee, vsize] pairs"/>
+
+
+	<!-- deprecate
+	<request name="blockchain.utxo.get_address" dir="client" result="any">
+		<param name="tx_hash" type="string" desc=""/>
+		<param name="index" type="string" desc=""/>
+	</request>
+	<request name="blockchain.numblocks.subscribe" dir="client" result="number"/>
+	<notification name="blockchain.numblocks.subscribe" dir="server">
+		<param name="block_height" type="number" desc=""/>
+	</notification>
+
+	-->
+
+	<!-- deprecate
+	<request name="blockchain.block.get_chunk" dir="client" result="string">
+		<param name="index" type="number" desc=""/>
+	</request>
+	<request name="blockchain.address.get_balance" dir="client" result="coin_balance">
+		<param name="address" type="string" desc="The address as a Base58 string."/>
+	</request>
+	<request name="blockchain.address.get_history" dir="client" result="array<object>">
+		<param name="address" type="string" desc="The address as a Base58 string."/>
+	</request>
+	<request name="blockchain.address.get_mempool" dir="client" result="array<object>">
+		<param name="address" type="string" desc="The address as a Base58 string."/>
+	</request>
+	<request name="blockchain.address.listunspent" dir="client" result="array<object>">
+		<param name="address" type="string" desc="The address as a Base58 string."/>
+	</request>
+
+	<request name="blockchain.address.subscribe" dir="client" result="string">
+		<param name="address" type="string" desc="The address as a Base58 string."/>
+	</request>
+	<notification name="blockchain.address.subscribe" dir="server">
+		<param name="address" type="string" desc="The address as a Base58 string."/>
+		<param name="tx_hash" type="string" desc=""/>
+	</notification>
+	-->
+
+</idl>
