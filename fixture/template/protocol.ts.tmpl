@@ -23,7 +23,7 @@ export class {{ util.makeUpperCamelCase(name, "-") }} extends Client{
     {% set ts = i.code(coder.typescript) %}
     // {{ i.desc }}
     public {{ ts.func_name }} ( {{ ts.func_params.join(", ") | safe}} ): Promise<{{ ts.func_return | safe}}> {
-        return this.request("{{ i.name }}", [ {{ ts.params.join(", ") }} ])
+        return this.request("{{ ts.request_name }}", [ {{ ts.params.join(", ") }} ])
     }
 {%- endif -%}
 {%- endfor %}

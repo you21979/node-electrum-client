@@ -20,7 +20,7 @@
 
 	<request name="server.version" dir="client" result="string" desc="Identify the client to the server and negotiate the protocol version.">
 		<param name="client_name" type="string" desc="A string identifying the connecting client software."/>
-		<param name="protocol_version" type="tuple<string,string>" default="['1.2']" desc="An array [protocol_min, protocol_max]"/>
+		<param name="protocol_version" type="tuple[string,string]" default="['1.2', '1.2']" desc="An array [protocol_min, protocol_max]"/>
 	</request>
 
 	<request name="server.banner" dir="client" result="string"/>
