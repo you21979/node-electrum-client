@@ -63,6 +63,28 @@
 		<param name="block_header" type="block_header" desc=""/>
 	</notification>
 
+
+	<!-- new -->
+	<request name="blockchain.scripthash.get_balance" dir="client" result="any" desc="">
+		<param name="scripthash" type="string" desc=""/>
+	</request>
+	<request name="blockchain.scripthash.get_history" dir="client" result="any" desc="">
+		<param name="scripthash" type="string" desc=""/>
+	</request>
+	<request name="blockchain.scripthash.get_mempool" dir="client" result="any" desc="">
+		<param name="scripthash" type="string" desc=""/>
+	</request>
+	<request name="blockchain.scripthash.listunspent" dir="client" result="any" desc="">
+		<param name="scripthash" type="string" desc=""/>
+	</request>
+	<request name="blockchain.scripthash.subscribe" dir="client" result="any" desc="">
+		<param name="scripthash" type="string" desc=""/>
+	</request>
+	<notification name="blockchain.scripthash.subscribe" dir="server">
+		<param name="scripthash" type="string" desc=""/>
+		<param name="tx_hash" type="string" desc=""/>
+	</notification>
+
 	<!-- new -->
 	<request name="server.ping" dir="client" result="void"/>
 	<request name="mempool.get_fee_histogram" dir="client" result="array<tuple<number, number>>"
