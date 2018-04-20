@@ -21,6 +21,7 @@ export class MockClient implements ISocketEvent{
     private jmp: JsonMessageParser
     private status: number
     public subscribe: EventEmitter
+    private conn: boolean
     
     constructor(){
         this.seq = 0
@@ -28,6 +29,7 @@ export class MockClient implements ISocketEvent{
         this.host = 'test.example.com'
         this.callback_message_table = {}
         this.subscribe = new EventEmitter()
+        this.conn = false
         this.jmp = new JsonMessageParser((obj: any): void => {
             const type = util2.autoDetect(obj)
             switch(type){
@@ -55,7 +57,14 @@ export class MockClient implements ISocketEvent{
             return Promise.resolve()
         }
         this.status = 1
-        return Promise.resolve()
+        this.conn = true
+        const loop = () => {
+            if(this.conn){
+                setTimeout(() => loop(), 1000)
+            }
+        }
+        loop()
+        return new Promise((resolve) => resolve())
     }
 
     close(): void{
@@ -63,6 +72,7 @@ export class MockClient implements ISocketEvent{
             return
         }
         this.status = 0
+        this.conn = false
     }
 
     injectResponse(msg: string): void{
