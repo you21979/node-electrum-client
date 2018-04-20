@@ -82,7 +82,10 @@ export class Client implements ISocketEvent{
         })
     }
 
-    response(type: type2.JSON_TYPE, obj: type2.IBaseResponse){
+    response(type: type2.JSON_TYPE, obj: type2.IBaseResponse): void{
+        if(obj.id === null){
+            return
+        }
         const cb: async_callback = this.callback_message_table[obj.id]
         if(cb){
             delete this.callback_message_table[obj.id]

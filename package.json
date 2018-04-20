@@ -24,7 +24,7 @@
     "bitcoin"
   ],
   "dependencies": {
-    "jsonrpc-spec": "0.0.2"
+    "jsonrpc-spec": "0.0.3"
   },
   "devDependencies": {
     "electrum-host-parse": "*",
