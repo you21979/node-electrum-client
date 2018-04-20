@@ -34,7 +34,8 @@ export class Client implements ISocketEvent{
             const type = util2.autoDetect(obj)
             switch(type){
             case type2.JSON_TYPE.BATCH:
-                break // don't support batch request
+                this.onMessageBatchResponse(obj as Array<object>)
+                break
             case type2.JSON_TYPE.RESPONSE:
                 this.onMessageResponse(type2.JSON_TYPE.RESPONSE, obj as type2.IBaseResponse)
                 break
@@ -107,6 +108,9 @@ export class Client implements ISocketEvent{
     private onMessageNotification(obj: any): void{
         const message = util2.resolveNotification<any>(obj)
         this.subscribe.emit(message.method, message.params)
+    }
+    private onMessageBatchResponse(obj: Array<object>): void{
+        // don't support batch request
     }
 
     onConnect(): void{
