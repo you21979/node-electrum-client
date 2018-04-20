@@ -1,10 +1,6 @@
 // this file is auto generated.
 import {Client} from './client'
 
-export const document = {
-    hash : "{{ document.hash }}"
-}
-
 {% for i in struct %}
 {% set ts = i.code(coder.typescript) %}
 // {{ i.desc }}
@@ -13,42 +9,47 @@ export interface {{ ts.struct_name }} {
 }
 {% endfor %}
 
-{% for i in struct %}
-{% set ts = i.code(coder.typescript) %}
-export const validate{{ ts.struct_name }} = ( obj: object ): boolean => {
-{%- for j in i.storage %}
-    if(!( '{{ j.name }}' in obj )){
-        return false;
-    }
-{%- endfor %}
-    return true;
-}
-{% endfor %}
-
-export class {{ util.makeUpperCamelCase(name, "-") }} extends Client{
+export class {{ util.makeUpperCamelCase(name, "-") }}{
+    static libname: string = "javascript client"
     static version: string = "{{ version }}"
-    constructor(port, host, protocol, options){
-        super(port, host, protocol, options)
+    static hash: string = "{{ document.hash }}"
+    client: Client
+    constructor(client: Client){
+        this.client = client
+        this.client.subscribe.on('close', () => { this.onClose() })
     }
 {%- for i in request -%}
 {%- if i.dir === 0 -%}
     {% set ts = i.code(coder.typescript) %}
     // {{ i.desc }}
     public {{ ts.func_name }} ( {{ ts.func_params.join(", ") | safe}} ): Promise<{{ ts.func_return | safe}}> {
-        return this.request("{{ ts.request_name }}", [ {{ ts.params.join(", ") }} ])
+        return this.client.request("{{ ts.request_name }}", [ {{ ts.params.join(", ") }} ])
     }
 {%- endif -%}
 {%- endfor %}
 
     onClose(): void{
-        super.onClose()
         const list: Array<string> = []
 {%- for i in notification -%}
 {% if i.dir === 1 %}
         list.push("{{ i.name }}")
 {%- endif -%}
 {%- endfor %}
-        list.forEach(event => this.subscribe.removeAllListeners(event))
+        list.forEach(event => this.client.subscribe.removeAllListeners(event))
     }
+}
+
+export namespace validate {
+{%- for i in struct %}
+{%- set ts = i.code(coder.typescript) %}
+    export const {{ ts.struct_name }} = ( obj: object ): boolean => {
+{%- for j in i.storage %}
+        if(!( '{{ j.name }}' in obj )){
+            return false;
+        }
+{%- endfor %}
+        return true;
+    }
+{%- endfor %}
 }
 
