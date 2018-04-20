@@ -107,6 +107,9 @@
 		<param name="scripthash" type="string" desc=""/>
 		<param name="tx_hash" type="string" desc=""/>
 	</notification>
+	<request name="server.add_peer" dir="client" result="any" desc="">
+		<param name="features" type="object" desc=""/>
+	</request>
 
 	<!-- deprecate
 	<request name="blockchain.utxo.get_address" dir="client" result="any">

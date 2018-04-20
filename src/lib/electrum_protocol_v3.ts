@@ -43,7 +43,7 @@ export interface ITxInfoUnspent {
 export class ElectrumProtocol{
     static libname: string = "javascript client"
     static version: string = "1.1"
-    static hash: string = "933bc4652cc00c96fbe033cd2ea193412777dc6135cd5bf405fc2f1d5498bb6e"
+    static hash: string = "490521be6a5183a0b120979c099ac4e0ba77f53dfde0bb1d6828bc5f0a9faa29"
     client: ISocketEvent
     constructor(client: ISocketEvent){
         this.client = client
@@ -136,6 +136,10 @@ export class ElectrumProtocol{
     // 
     public blockchain_scripthash_subscribe ( scripthash: string ): Promise<object> {
         return this.client.request("blockchain.scripthash.subscribe", [ scripthash ])
+    }
+    // 
+    public server_addPeer ( features: object ): Promise<object> {
+        return this.client.request("server.add_peer", [ features ])
     }
 
     onClose(): void{
