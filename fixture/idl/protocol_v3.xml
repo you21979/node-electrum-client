@@ -76,6 +76,27 @@
 		<param name="block_header" type="block_header" desc=""/>
 	</notification>
 
+	<!-- new 1.1 -->
+	<request name="blockchain.scripthash.get_balance" dir="client" result="coin_balance" desc="Return the confirmed and unconfirmed balances of a script hash.">
+		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
+	</request>
+	<request name="blockchain.scripthash.get_history" dir="client" result="array<object>" desc="Return the confirmed and unconfirmed history of a script hash.">
+		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
+	</request>
+	<request name="blockchain.scripthash.get_mempool" dir="client" result="array<tx_info_mempool>" desc="Return the unconfirmed transactions of a script hash.">
+		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
+	</request>
+	<request name="blockchain.scripthash.listunspent" dir="client" result="array<tx_info_unspent>" desc="A list of unspent outputs in blockchain order. This function takes the mempool into account.">
+		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
+	</request>
+	<request name="blockchain.scripthash.subscribe" dir="client" result="any" desc="">
+		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
+	</request>
+	<notification name="blockchain.scripthash.subscribe" dir="server">
+		<param name="scripthash" type="string" desc=""/>
+		<param name="tx_hash" type="string" desc=""/>
+	</notification>
+
 	<!-- deprecate
 	<request name="blockchain.utxo.get_address" dir="client" result="any">
 		<param name="tx_hash" type="string" desc=""/>

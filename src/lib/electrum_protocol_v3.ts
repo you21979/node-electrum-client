@@ -26,7 +26,7 @@ export interface IBlockHeader {
 export class ElectrumProtocol{
     static libname: string = "javascript client"
     static version: string = "1.1"
-    static hash: string = "122e00228e80f8af38ed87b2e22425dfd6ddd43671141fff69943add4c74e1e3"
+    static hash: string = "1643e8267280b860c39e04a30a3ae666bfb2e39e066d83509e69c7c2c5e463b3"
     client: ISocketEvent
     constructor(client: ISocketEvent){
         this.client = client
@@ -100,11 +100,32 @@ export class ElectrumProtocol{
     public blockchain_headers_subscribe (  ): Promise<IBlockHeader> {
         return this.client.request("blockchain.headers.subscribe", [  ])
     }
+    // Return the confirmed and unconfirmed balances of a script hash.
+    public blockchain_scripthash_getBalance ( scripthash: string ): Promise<ICoinBalance> {
+        return this.client.request("blockchain.scripthash.get_balance", [ scripthash ])
+    }
+    // Return the confirmed and unconfirmed history of a script hash.
+    public blockchain_scripthash_getHistory ( scripthash: string ): Promise<Array<object>> {
+        return this.client.request("blockchain.scripthash.get_history", [ scripthash ])
+    }
+    // Return the unconfirmed transactions of a script hash.
+    public blockchain_scripthash_getMempool ( scripthash: string ): Promise<Array<ITxInfoMempool>> {
+        return this.client.request("blockchain.scripthash.get_mempool", [ scripthash ])
+    }
+    // A list of unspent outputs in blockchain order. This function takes the mempool into account.
+    public blockchain_scripthash_listunspent ( scripthash: string ): Promise<Array<ITxInfoUnspent>> {
+        return this.client.request("blockchain.scripthash.listunspent", [ scripthash ])
+    }
+    // 
+    public blockchain_scripthash_subscribe ( scripthash: string ): Promise<object> {
+        return this.client.request("blockchain.scripthash.subscribe", [ scripthash ])
+    }
 
     onClose(): void{
         const list: Array<string> = []
         list.push("blockchain.address.subscribe")
         list.push("blockchain.headers.subscribe")
+        list.push("blockchain.scripthash.subscribe")
         list.forEach(event => this.client.subscribe.removeAllListeners(event))
     }
 }
