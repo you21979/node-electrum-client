@@ -2,23 +2,29 @@
 <idl name="electrum-protocol" version="1.2">
 
 	<!-- struct -->
-	<struct name="coin_balance">
+	<struct name="coin_balance" desc="result of blockchain.scripthash.get_balance">
 		<param name="confirmed" type="string" desc=""/>
 		<param name="unconfirmed" type="string" desc=""/>
 	</struct>
-	<struct name="block_header">
+	<struct name="block_header" desc="result of blockchain.headers.subscribe">
 		<param name="height" type="number" desc=""/>
 		<param name="hex" type="string" desc=""/>
 	</struct>
-	<struct name="tx_merkle">
+	<struct name="tx_merkle" desc="result of blockchain.transaction.get_merkle">
 		<param name="merkle" type="array<string>" desc="A list of transaction hashes the current hash is paired with, recursively, in order to trace up to obtain merkle root of the block, deepest pairing first."/>
 		<param name="block_height" type="number" desc="The height of the block the transaction was confirmed in."/>
 		<param name="pos" type="number" desc="The 0-based index of the position of the transaction in the ordered list of transactions in the block."/>
 	</struct>
-	<struct name="tx_info_mempool">
+	<struct name="tx_info_mempool" desc="result of blockchain.scripthash.get_mempool">
 		<param name="tx_hash" type="string" desc=""/>
 		<param name="height" type="number" desc=""/>
 		<param name="fee" type="number" desc=""/>
+	</struct>
+	<struct name="tx_info_unspent" desc="result of blockchain.scripthash.listunspent">
+		<param name="tx_pos" type="number" desc="The zero-based index of the output in the transaction’s list of outputs."/>
+		<param name="value" type="number" desc="The output’s value in minimum coin units (satoshis)."/>
+		<param name="tx_hash" type="string" desc="The output’s transaction hash as a hexadecimal string."/>
+		<param name="height" type="number" desc="The integer height of the block the transaction was confirmed in. 0 if the transaction is in the mempool."/>
 	</struct>
 
 	<!-- rpc -->
@@ -31,7 +37,7 @@
 	<request name="server.banner" dir="client" result="string"/>
 	<request name="server.donation_address" dir="client" result="string"/>
 	<request name="server.features" dir="client" result="object"/>
-	<request name="server.peers.subscribe" dir="client" result="array<any>" desc="They don’t send notifications yet"/>
+	<request name="server.peers.subscribe" dir="client" result="tuple<string,string,array<string>>" desc="They don’t send notifications yet"/>
 
 	<request name="blockchain.transaction.broadcast" dir="client" result="string">
 		<param name="rawtx" type="string" desc=""/>
@@ -53,10 +59,6 @@
 		<param name="target_block" type="number" desc="2 - 6 block"/>
 	</request>
 
-	<request name="blockchain.address.get_proof" dir="client" result="any">
-		<param name="address" type="string" desc="The address as a Base58 string."/>
-	</request>
-
 	<request name="blockchain.block.get_header" dir="client" result="object">
 		<param name="height" type="number" desc=""/>
 	</request>
@@ -68,8 +70,7 @@
 		<param name="block_header" type="block_header" desc=""/>
 	</notification>
 
-
-	<!-- new -->
+	<!-- new 1.1 -->
 	<request name="blockchain.scripthash.get_balance" dir="client" result="coin_balance" desc="Return the confirmed and unconfirmed balances of a script hash.">
 		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
 	</request>
@@ -79,7 +80,7 @@
 	<request name="blockchain.scripthash.get_mempool" dir="client" result="array<tx_info_mempool>" desc="Return the unconfirmed transactions of a script hash.">
 		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
 	</request>
-	<request name="blockchain.scripthash.listunspent" dir="client" result="any" desc="">
+	<request name="blockchain.scripthash.listunspent" dir="client" result="array<tx_info_unspent>" desc="A list of unspent outputs in blockchain order. This function takes the mempool into account.">
 		<param name="scripthash" type="string" desc="The script hash as a hexadecimal string."/>
 	</request>
 	<request name="blockchain.scripthash.subscribe" dir="client" result="any" desc="">
@@ -90,13 +91,13 @@
 		<param name="tx_hash" type="string" desc=""/>
 	</notification>
 
-	<!-- new -->
+	<!-- new 1.2 -->
 	<request name="server.ping" dir="client" result="void"/>
 	<request name="mempool.get_fee_histogram" dir="client" result="array<tuple[number, number]>"
 			desc="Return a histogram of the fee rates paid by transactions in the memory pool, weighted by transaction size. [fee, vsize] pairs"/>
 
 
-	<!-- deprecate
+	<!-- deprecate 1.0
 	<request name="blockchain.utxo.get_address" dir="client" result="any">
 		<param name="tx_hash" type="string" desc=""/>
 		<param name="index" type="string" desc=""/>
@@ -108,7 +109,7 @@
 
 	-->
 
-	<!-- deprecate
+	<!-- deprecate 1.1
 	<request name="blockchain.block.get_chunk" dir="client" result="string">
 		<param name="index" type="number" desc=""/>
 	</request>
@@ -133,5 +134,12 @@
 		<param name="tx_hash" type="string" desc=""/>
 	</notification>
 	-->
+
+	<!-- ????
+	<request name="blockchain.address.get_proof" dir="client" result="any">
+		<param name="address" type="string" desc="The address as a Base58 string."/>
+	</request>
+	-->
+
 
 </idl>

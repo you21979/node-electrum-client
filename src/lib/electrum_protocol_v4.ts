@@ -1,27 +1,27 @@
+// this file is auto generated.
 import {Client} from './client'
 
-// this file is auto generated.
 export const document = {
-    hash : "4a59589e50ccbe3acf25c1f0c52d28da51149994be3b00f037172be517853131"
+    hash : "540035dd8324282e604d0c5c3c464d01e097a1d882646629ffd53f9799ec8698"
 }
 
 
 
-// 
+// result of blockchain.scripthash.get_balance
 export interface ICoinBalance {
     confirmed: string
     unconfirmed: string
 }
 
 
-// 
+// result of blockchain.headers.subscribe
 export interface IBlockHeader {
     height: number
     hex: string
 }
 
 
-// 
+// result of blockchain.transaction.get_merkle
 export interface ITxMerkle {
     merkle: Array<string>
     block_height: number
@@ -29,11 +29,89 @@ export interface ITxMerkle {
 }
 
 
-// 
+// result of blockchain.scripthash.get_mempool
 export interface ITxInfoMempool {
     tx_hash: string
     height: number
     fee: number
+}
+
+
+// result of blockchain.scripthash.listunspent
+export interface ITxInfoUnspent {
+    tx_pos: number
+    value: number
+    tx_hash: string
+    height: number
+}
+
+
+
+
+export const validateICoinBalance = ( obj: object ): boolean => {
+    if(!( 'confirmed' in obj )){
+        return false;
+    }
+    if(!( 'unconfirmed' in obj )){
+        return false;
+    }
+    return true;
+}
+
+
+export const validateIBlockHeader = ( obj: object ): boolean => {
+    if(!( 'height' in obj )){
+        return false;
+    }
+    if(!( 'hex' in obj )){
+        return false;
+    }
+    return true;
+}
+
+
+export const validateITxMerkle = ( obj: object ): boolean => {
+    if(!( 'merkle' in obj )){
+        return false;
+    }
+    if(!( 'block_height' in obj )){
+        return false;
+    }
+    if(!( 'pos' in obj )){
+        return false;
+    }
+    return true;
+}
+
+
+export const validateITxInfoMempool = ( obj: object ): boolean => {
+    if(!( 'tx_hash' in obj )){
+        return false;
+    }
+    if(!( 'height' in obj )){
+        return false;
+    }
+    if(!( 'fee' in obj )){
+        return false;
+    }
+    return true;
+}
+
+
+export const validateITxInfoUnspent = ( obj: object ): boolean => {
+    if(!( 'tx_pos' in obj )){
+        return false;
+    }
+    if(!( 'value' in obj )){
+        return false;
+    }
+    if(!( 'tx_hash' in obj )){
+        return false;
+    }
+    if(!( 'height' in obj )){
+        return false;
+    }
+    return true;
 }
 
 
@@ -59,7 +137,7 @@ export class ElectrumProtocol extends Client{
         return this.request("server.features", [  ])
     }
     // They don’t send notifications yet
-    public server_peers_subscribe (  ): Promise<Array<object>> {
+    public server_peers_subscribe (  ): Promise<Array<Array<string>>> {
         return this.request("server.peers.subscribe", [  ])
     }
     // 
@@ -83,10 +161,6 @@ export class ElectrumProtocol extends Client{
         return this.request("blockchain.estimatefee", [ target_block ])
     }
     // 
-    public blockchain_address_getProof ( address: string ): Promise<object> {
-        return this.request("blockchain.address.get_proof", [ address ])
-    }
-    // 
     public blockchain_block_getHeader ( height: number ): Promise<object> {
         return this.request("blockchain.block.get_header", [ height ])
     }
@@ -106,8 +180,8 @@ export class ElectrumProtocol extends Client{
     public blockchain_scripthash_getMempool ( scripthash: string ): Promise<Array<ITxInfoMempool>> {
         return this.request("blockchain.scripthash.get_mempool", [ scripthash ])
     }
-    // 
-    public blockchain_scripthash_listunspent ( scripthash: string ): Promise<object> {
+    // A list of unspent outputs in blockchain order. This function takes the mempool into account.
+    public blockchain_scripthash_listunspent ( scripthash: string ): Promise<Array<ITxInfoUnspent>> {
         return this.request("blockchain.scripthash.listunspent", [ scripthash ])
     }
     // 

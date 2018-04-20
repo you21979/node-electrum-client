@@ -13,6 +13,18 @@ export interface {{ ts.struct_name }} {
 }
 {% endfor %}
 
+{% for i in struct %}
+{% set ts = i.code(coder.typescript) %}
+export const validate{{ ts.struct_name }} = ( obj: object ): boolean => {
+{%- for j in i.storage %}
+    if(!( '{{ j.name }}' in obj )){
+        return false;
+    }
+{%- endfor %}
+    return true;
+}
+{% endfor %}
+
 export class {{ util.makeUpperCamelCase(name, "-") }} extends Client{
     static version: string = "{{ version }}"
     constructor(port, host, protocol, options){
