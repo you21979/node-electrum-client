@@ -40,6 +40,22 @@ const proc = async (ecl) => {
     console.log(history)
 
     const chunk = await ecl.blockchain_block_getChunk(0)
+    console.log(chunk)
+
+    const mempool = await ecl.blockchain_address_getMempool("MMonapartyMMMMMMMMMMMMMMMMMMMUzGgh")
+    console.log(mempool)
+
+    const address = await ecl.blockchain_utxo_getAddress("b4a083037802c8be269db4007c1264880cc78183f198a4d4286e84532f8c93e3", 0)
+    console.log(address)
+
+    const info = await ecl.blockchain_address_subscribe("MMonapartyMMMMMMMMMMMMMMMMMMMUzGgh")
+    console.log(info)
+
+    const num = await ecl.blockchain_numblocks_subscribe()
+    console.log(num)
+
+    const bh = await ecl.blockchain_headers_subscribe()
+    console.log(bh)
 
 }
 
