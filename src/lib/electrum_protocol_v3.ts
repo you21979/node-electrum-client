@@ -23,10 +23,27 @@ export interface IBlockHeader {
 }
 
 
+// result of blockchain.scripthash.get_mempool
+export interface ITxInfoMempool {
+    tx_hash: string
+    height: number
+    fee: number
+}
+
+
+// result of blockchain.scripthash.listunspent
+export interface ITxInfoUnspent {
+    tx_pos: number
+    value: number
+    tx_hash: string
+    height: number
+}
+
+
 export class ElectrumProtocol{
     static libname: string = "javascript client"
     static version: string = "1.1"
-    static hash: string = "1643e8267280b860c39e04a30a3ae666bfb2e39e066d83509e69c7c2c5e463b3"
+    static hash: string = "933bc4652cc00c96fbe033cd2ea193412777dc6135cd5bf405fc2f1d5498bb6e"
     client: ISocketEvent
     constructor(client: ISocketEvent){
         this.client = client
@@ -163,6 +180,33 @@ export namespace validate {
             return false;
         }
         if(!( 'bits' in obj )){
+            return false;
+        }
+        return true;
+    }
+    export const ITxInfoMempool = ( obj: object ): boolean => {
+        if(!( 'tx_hash' in obj )){
+            return false;
+        }
+        if(!( 'height' in obj )){
+            return false;
+        }
+        if(!( 'fee' in obj )){
+            return false;
+        }
+        return true;
+    }
+    export const ITxInfoUnspent = ( obj: object ): boolean => {
+        if(!( 'tx_pos' in obj )){
+            return false;
+        }
+        if(!( 'value' in obj )){
+            return false;
+        }
+        if(!( 'tx_hash' in obj )){
+            return false;
+        }
+        if(!( 'height' in obj )){
             return false;
         }
         return true;

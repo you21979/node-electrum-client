@@ -16,6 +16,17 @@
 		<param name="version" type="number" desc=""/>
 		<param name="bits" type="number" desc=""/>
 	</struct>
+	<struct name="tx_info_mempool" desc="result of blockchain.scripthash.get_mempool">
+		<param name="tx_hash" type="string" desc=""/>
+		<param name="height" type="number" desc=""/>
+		<param name="fee" type="number" desc=""/>
+	</struct>
+	<struct name="tx_info_unspent" desc="result of blockchain.scripthash.listunspent">
+		<param name="tx_pos" type="number" desc="The zero-based index of the output in the transaction’s list of outputs."/>
+		<param name="value" type="number" desc="The output’s value in minimum coin units (satoshis)."/>
+		<param name="tx_hash" type="string" desc="The output’s transaction hash as a hexadecimal string."/>
+		<param name="height" type="number" desc="The integer height of the block the transaction was confirmed in. 0 if the transaction is in the mempool."/>
+	</struct>
 
 	<!-- rpc -->
 
