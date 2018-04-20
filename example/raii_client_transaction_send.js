@@ -1,19 +1,22 @@
 'use strict';
-const ElectrumClient = require('..');
+const electrumclient = require('..')
+const Client = electrumclient.Client
+const ElectrumProtocol = electrumclient.v2.ElectrumProtocol
 
 const createRaiiClient = (port, host, protocol, options) => {
+    const myname = [ElectrumProtocol.libname, ElectrumProtocol.hash].join('-')
     return (params, promise) => {
         const name = params.join(':')
-        const client = new ElectrumClient(port, host, protocol, options)
+        const ecl = new ElectrumProtocol(new Client(port, host, protocol, options))
         console.time(name)
-        return client.connect().then( () => {
-            return promise(client)
+        return ecl.client.connect().then( () => ecl.server_version(myname) ).then( () => {
+            return promise(ecl)
         }).catch( e => {
-            client.close()
+            ecl.client.close()
             console.timeEnd(name)
             throw e
         }).then( res => {
-            client.close()
+            ecl.client.close()
             console.timeEnd(name)
             return res
         })
@@ -25,10 +28,8 @@ const main = async(hex) => {
     const hosts = ['electrum-mona.bitbank.cc', 'electrumx.tamami-foundation.org']
     const host = hosts[Math.floor(Math.random() * hosts.length)]
     const connect = createRaiiClient(50001, host, 'tcp')
-    await connect(['blockchainTransaction_broadcast', hex], async(client) => {
-        const ver = await client.server_version('2.7.11', '1.0')
-        console.log(ver)
-        const result = await client.blockchainTransaction_broadcast(hex)
+    await connect(['blockchain_transaction_broadcast', hex], async(client) => {
+        const result = await client.blockchain_transaction_broadcast(hex)
         console.log(result)
     })
 }
