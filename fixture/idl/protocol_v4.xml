@@ -135,11 +135,4 @@
 	</notification>
 	-->
 
-	<!-- ????
-	<request name="blockchain.address.get_proof" dir="client" result="any">
-		<param name="address" type="string" desc="The address as a Base58 string."/>
-	</request>
-	-->
-
-
 </idl>

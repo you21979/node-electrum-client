@@ -26,7 +26,7 @@ export interface IBlockHeader {
 export class ElectrumProtocol{
     static libname: string = "javascript client"
     static version: string = "1.1"
-    static hash: string = "4ab794e226e61024fad9fefb30d2af23c5b80c9cc61364077ee183b687692254"
+    static hash: string = "122e00228e80f8af38ed87b2e22425dfd6ddd43671141fff69943add4c74e1e3"
     client: ISocketEvent
     constructor(client: ISocketEvent){
         this.client = client
@@ -67,10 +67,6 @@ export class ElectrumProtocol{
     // 
     public blockchain_estimatefee ( target_block: number ): Promise<number> {
         return this.client.request("blockchain.estimatefee", [ target_block ])
-    }
-    // 
-    public blockchain_address_getProof ( address: string ): Promise<object> {
-        return this.client.request("blockchain.address.get_proof", [ address ])
     }
     // 
     public blockchain_block_getHeader ( height: number ): Promise<object> {

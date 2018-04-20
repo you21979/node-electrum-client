@@ -45,7 +45,7 @@ export interface ITxInfoUnspent {
 export class ElectrumProtocol{
     static libname: string = "javascript client"
     static version: string = "1.2"
-    static hash: string = "540035dd8324282e604d0c5c3c464d01e097a1d882646629ffd53f9799ec8698"
+    static hash: string = "1c6d632837885b3377a68bb4d62e77876861e464b880ae8f5e9c53a41b719c20"
     client: ISocketEvent
     constructor(client: ISocketEvent){
         this.client = client
