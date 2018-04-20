@@ -1,5 +1,5 @@
 // this file is auto generated.
-import {Client} from './client'
+import {ISocketEvent} from './socket_helper'
 
 {% for i in struct %}
 {% set ts = i.code(coder.typescript) %}
@@ -13,8 +13,8 @@ export class {{ util.makeUpperCamelCase(name, "-") }}{
     static libname: string = "javascript client"
     static version: string = "{{ version }}"
     static hash: string = "{{ document.hash }}"
-    client: Client
-    constructor(client: Client){
+    client: ISocketEvent
+    constructor(client: ISocketEvent){
         this.client = client
         this.client.subscribe.on('close', () => { this.onClose() })
     }

@@ -1,5 +1,6 @@
 import { Socket } from 'net'
 import { TLSSocket } from 'tls'
+import {EventEmitter} from 'events'
 
 const TIMEOUT = 10000
 
@@ -35,6 +36,8 @@ export interface ISocketEvent{
     onRecv: (chunk:string) => void
     onConnect: () => void
     onClose: (e: Error) => void
+    subscribe: EventEmitter
+    request: (method: string, params: Array<any>) => Promise<any>
 }
 
 export const initSocket = (ev: ISocketEvent, protocol: string, options: any): Socket => {

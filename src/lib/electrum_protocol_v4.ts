@@ -1,5 +1,5 @@
 // this file is auto generated.
-import {Client} from './client'
+import {ISocketEvent} from './socket_helper'
 
 
 
@@ -46,8 +46,8 @@ export class ElectrumProtocol{
     static libname: string = "javascript client"
     static version: string = "1.2"
     static hash: string = "540035dd8324282e604d0c5c3c464d01e097a1d882646629ffd53f9799ec8698"
-    client: Client
-    constructor(client: Client){
+    client: ISocketEvent
+    constructor(client: ISocketEvent){
         this.client = client
         this.client.subscribe.on('close', () => { this.onClose() })
     }
